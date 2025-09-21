@@ -1,0 +1,7 @@
+# Отключаем ESLint для всех файлов
+*
+**/*
+src/
+dist/
+node_modules/
+test/
