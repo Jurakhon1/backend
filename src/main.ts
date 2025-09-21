@@ -57,8 +57,8 @@ async function bootstrap() {
     },
   });
 
-  const port = process.env.PORT ?? 3000;
-  await app.listen(3000, '192.168.2.102');
+  const port = process.env.PORT ?? 8181;
+  await app.listen(8181,);
 
   console.log(`🚀 Сервер запущен на http://localhost:${port}`);
   console.log(`📚 Swagger документация: http://localhost:${port}/api`);
