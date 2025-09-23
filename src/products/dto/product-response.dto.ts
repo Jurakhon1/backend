@@ -25,24 +25,43 @@ export class ProductSpecificationDto {
 
 export class ProductResponseDto {
   id: number;
-  name_ru: string;
-  name_en: string;
+  nameRu: string; // Изменено для совместимости с Frontend
+  nameEn: string; // Изменено для совместимости с Frontend
   slug: string;
-  category: {
+  descriptionRu?: string;
+  descriptionEn?: string;
+  basePrice: number; // Изменено для совместимости с Frontend
+  discountPrice?: number; // Изменено для совместимости с Frontend
+  stockQuantity: number; // Изменено для совместимости с Frontend
+  sku: string;
+  barcode?: string;
+  weight?: number;
+  rating?: number; // Добавлено
+  reviewCount: number; // Добавлено
+  isActive: boolean; // Изменено для совместимости с Frontend
+  isFeatured: boolean; // Добавлено
+  categoryId: number; // Добавлено
+  brandId?: number; // Добавлено
+  category?: {
     id: number;
-    name_ru: string;
-    name_en: string;
+    nameRu: string;
+    nameEn: string;
     slug: string;
   };
-  brand: {
+  brand?: {
     id: number;
     name: string;
     slug: string;
   };
-  base_price: number;
-  stock_quantity: number;
-  is_active: boolean;
-  created_at: Date;
+  images?: {
+    id: number;
+    imageUrl: string;
+    altText?: string;
+    sortOrder: number;
+    isPrimary: boolean;
+  }[];
+  createdAt: Date; // Изменено для совместимости с Frontend
+  updatedAt: Date; // Добавлено
   variants?: ProductVariantDto[];
   specifications?: ProductSpecificationDto[];
 

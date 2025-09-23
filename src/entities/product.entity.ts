@@ -55,6 +55,9 @@ export class Product {
   @Column({ unique: true })
   sku: string;
 
+  @Column({ nullable: true })
+  barcode: string;
+
   @Column({ type: 'text', nullable: true })
   description_ru: string;
 
@@ -71,10 +74,23 @@ export class Product {
   base_price: number;
 
   @Column('decimal', { precision: 10, scale: 2, nullable: true })
-  sale_price: number;
+  discount_price: number;
 
   @Column({ default: 'RUB' })
   currency: string;
+
+  // Добавляем недостающие поля для совместимости с Frontend
+  @Column('decimal', { precision: 2, scale: 1, nullable: true, default: 0.0 })
+  rating: number;
+
+  @Column('int', { default: 0 })
+  review_count: number;
+
+  @Column('int')
+  category_id: number;
+
+  @Column('int', { nullable: true })
+  brand_id: number;
 
   @Column('decimal', { precision: 8, scale: 2, nullable: true })
   weight: number; // в граммах

@@ -63,98 +63,132 @@ export class ProductsService {
     });
 
     const savedProduct = await this.productsRepository.save(product);
-    return new ProductResponseDto({
-      ...savedProduct,
-      category: {
-        id: category.id,
-        name_ru: category.nameRu,
-        name_en: category.nameEn,
-        slug: category.slug,
-      },
-      brand: {
-        id: brand.id,
-        name: brand.name,
-        slug: brand.slug,
-      },
-    });
+    return this.mapToResponseDto(savedProduct);
   }
 
   async findAll(): Promise<ProductResponseDto[]> {
     const products = await this.productsRepository.find({
-      relations: ['category', 'brand'],
+      relations: ['category', 'brand', 'images'],
     });
 
-    return products.map(
-      (product) =>
-        new ProductResponseDto({
-          ...product,
-          category: {
+    return products.map((product) => this.mapToResponseDto(product));
+  }
+
+  // Добавляем метод для поиска с фильтрацией
+  async findWithFilters(filters: {
+    categoryId?: number;
+    query?: string;
+    minPrice?: number;
+    maxPrice?: number;
+  }): Promise<ProductResponseDto[]> {
+    const queryBuilder = this.productsRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.brand', 'brand')
+      .leftJoinAndSelect('product.images', 'images')
+      .where('product.is_active = :isActive', { isActive: true });
+
+    if (filters.categoryId) {
+      queryBuilder.andWhere('product.category_id = :categoryId', {
+        categoryId: filters.categoryId,
+      });
+    }
+
+    if (filters.query) {
+      queryBuilder.andWhere(
+        '(product.name_ru LIKE :query OR product.name_en LIKE :query OR product.description_ru LIKE :query OR product.description_en LIKE :query)',
+        { query: `%${filters.query}%` },
+      );
+    }
+
+    if (filters.minPrice) {
+      queryBuilder.andWhere('product.base_price >= :minPrice', {
+        minPrice: filters.minPrice,
+      });
+    }
+
+    if (filters.maxPrice) {
+      queryBuilder.andWhere('product.base_price <= :maxPrice', {
+        maxPrice: filters.maxPrice,
+      });
+    }
+
+    const products = await queryBuilder.getMany();
+    return products.map((product) => this.mapToResponseDto(product));
+  }
+
+  // Добавляем метод для маппинга в ResponseDto
+  private mapToResponseDto(product: Product): ProductResponseDto {
+    return new ProductResponseDto({
+      id: product.id,
+      nameRu: product.name_ru,
+      nameEn: product.name_en,
+      slug: product.slug,
+      descriptionRu: product.description_ru,
+      descriptionEn: product.description_en,
+      basePrice: product.base_price,
+      discountPrice: product.discount_price,
+      stockQuantity: product.stock_quantity,
+      sku: product.sku,
+      barcode: product.sku, // Using SKU as barcode for now
+      weight: product.weight,
+      rating: product.rating,
+      reviewCount: product.review_count,
+      isActive: product.is_active,
+      isFeatured: product.is_featured,
+      categoryId: product.category_id,
+      brandId: product.brand_id,
+      category: product.category
+        ? {
             id: product.category.id,
-            name_ru: product.category.nameRu,
-            name_en: product.category.nameEn,
+            nameRu: product.category.nameRu,
+            nameEn: product.category.nameEn,
             slug: product.category.slug,
-          },
-          brand: {
+          }
+        : undefined,
+      brand: product.brand
+        ? {
             id: product.brand.id,
             name: product.brand.name,
             slug: product.brand.slug,
-          },
-        }),
-    );
+          }
+        : undefined,
+      images: product.images?.map((img) => ({
+        id: img.id,
+        imageUrl: img.imageUrl,
+        altText: img.altTextRu,
+        sortOrder: img.sortOrder,
+        isPrimary: img.isPrimary,
+      })),
+      createdAt: product.created_at,
+      updatedAt: product.updated_at,
+    });
   }
 
   async findOne(id: number): Promise<ProductResponseDto> {
     const product = await this.productsRepository.findOne({
       where: { id },
-      relations: ['category', 'brand', 'variants', 'specifications'],
+      relations: ['category', 'brand', 'images', 'variants', 'specifications'],
     });
 
     if (!product) {
       throw new NotFoundException('Продукт не найден');
     }
 
-    return new ProductResponseDto({
-      ...product,
-      category: {
-        id: product.category.id,
-        name_ru: product.category.nameRu,
-        name_en: product.category.nameEn,
-        slug: product.category.slug,
-      },
-      brand: {
-        id: product.brand.id,
-        name: product.brand.name,
-        slug: product.brand.slug,
-      },
-      variants: product.variants || [],
-      specifications: product.specifications || [],
-    });
+    return this.mapToResponseDto(product);
   }
 
   async findBySlug(slug: string): Promise<ProductResponseDto> {
     const product = await this.productsRepository.findOne({
       where: { slug },
-      relations: ['category', 'brand'],
+      relations: ['category', 'brand', 'images'],
     });
 
     if (!product) {
       throw new NotFoundException('Продукт не найден');
     }
 
-    return new ProductResponseDto({
-      ...product,
-      category: {
-        id: product.category.id,
-        name_ru: product.category.nameRu,
-        name_en: product.category.nameEn,
-        slug: product.category.slug,
-      },
-      brand: {
-        id: product.brand.id,
-        name: product.brand.name,
-        slug: product.brand.slug,
-      },
-    });
+    return this.mapToResponseDto(product);
   }
 
   async update(
@@ -210,21 +244,7 @@ export class ProductsService {
     Object.assign(product, updateProductDto);
 
     const updatedProduct = await this.productsRepository.save(product);
-
-    return new ProductResponseDto({
-      ...updatedProduct,
-      category: {
-        id: updatedProduct.category.id,
-        name_ru: updatedProduct.category.nameRu,
-        name_en: updatedProduct.category.nameEn,
-        slug: updatedProduct.category.slug,
-      },
-      brand: {
-        id: updatedProduct.brand.id,
-        name: updatedProduct.brand.name,
-        slug: updatedProduct.brand.slug,
-      },
-    });
+    return this.mapToResponseDto(updatedProduct);
   }
 
   async remove(id: number): Promise<void> {
@@ -246,20 +266,6 @@ export class ProductsService {
 
     product.stock_quantity = quantity;
     const updatedProduct = await this.productsRepository.save(product);
-
-    return new ProductResponseDto({
-      ...updatedProduct,
-      category: {
-        id: updatedProduct.category.id,
-        name_ru: updatedProduct.category.nameRu,
-        name_en: updatedProduct.category.nameEn,
-        slug: updatedProduct.category.slug,
-      },
-      brand: {
-        id: updatedProduct.brand.id,
-        name: updatedProduct.brand.name,
-        slug: updatedProduct.brand.slug,
-      },
-    });
+    return this.mapToResponseDto(updatedProduct);
   }
 }

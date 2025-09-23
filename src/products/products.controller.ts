@@ -6,6 +6,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   ParseIntPipe,
   ValidationPipe,
   UseInterceptors,
@@ -43,6 +44,28 @@ export class ProductsController {
   @Get()
   async findAll(): Promise<ProductResponseDto[]> {
     return await this.productsService.findAll();
+  }
+
+  @Public()
+  @Get('search')
+  @ApiOperation({ summary: 'Поиск товаров с фильтрацией' })
+  @ApiResponse({
+    status: 200,
+    description: 'Список найденных товаров',
+    type: [ProductResponseDto],
+  })
+  async search(
+    @Query('q') query?: string,
+    @Query('category_id') categoryId?: number,
+    @Query('min_price') minPrice?: number,
+    @Query('max_price') maxPrice?: number,
+  ): Promise<ProductResponseDto[]> {
+    return await this.productsService.findWithFilters({
+      query,
+      categoryId,
+      minPrice,
+      maxPrice,
+    });
   }
 
   @Public()
