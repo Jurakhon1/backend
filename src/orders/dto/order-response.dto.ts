@@ -36,7 +36,7 @@ export class OrderResponseDto {
   total_amount: number;
   prepaid_amount: number;
   remaining_amount: number;
-  payment_deadline?: Date;
+  payment_deadline?: Date | null;
   notes?: string;
   tracking_number?: string;
   estimated_delivery_date?: Date;

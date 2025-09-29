@@ -18,9 +18,8 @@ import { PromoModule } from './promo/promo.module';
 import { AdminModule } from './admin/admin.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { AppSettingsModule } from './app-settings/app-settings.module';
+import { AddressesModule } from './addresses/addresses.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { RolesGuard } from './auth/guards/roles.guard';
-import { PermissionsGuard } from './auth/guards/permissions.guard';
 
 @Module({
   imports: [
@@ -40,6 +39,7 @@ import { PermissionsGuard } from './auth/guards/permissions.guard';
     AdminModule,
     NotificationsModule,
     AppSettingsModule,
+    AddressesModule,
   ],
   controllers: [AppController],
   providers: [
@@ -47,14 +47,6 @@ import { PermissionsGuard } from './auth/guards/permissions.guard';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: PermissionsGuard,
     },
   ],
 })

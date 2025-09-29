@@ -17,15 +17,6 @@ import { PromoCodeUsage } from './promo-code-usage.entity';
 import { CartItem } from './cart-item.entity';
 import { WishlistItem } from './wishlist-item.entity';
 
-export enum UserRole {
-  USER = 'user',           // Обычный покупатель
-  PREMIUM = 'premium',     // Премиум покупатель (больше бонусов)
-  ADMIN = 'admin',         // Администратор
-  SUPER_ADMIN = 'super_admin', // Супер администратор
-  MANAGER = 'manager',     // Менеджер (модерация заказов/отзывов)
-  SUPPORT = 'support',     // Поддержка
-}
-
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
@@ -79,16 +70,6 @@ export class User {
     default: 'auto',
   })
   themePreference: string;
-
-  @Column({
-    type: 'enum',
-    enum: UserRole,
-    default: UserRole.USER,
-  })
-  role: UserRole;
-
-  @Column({ type: 'json', nullable: true })
-  permissions: string[]; // дополнительные разрешения
 
   @OneToMany(() => UserAddress, (address) => address.user)
   addresses: UserAddress[];

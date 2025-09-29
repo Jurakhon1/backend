@@ -46,15 +46,10 @@ export class AuthService {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
-      role: user.role,
-      permissions: user.permissions || [],
     };
 
     const accessToken = this.jwtService.sign(payload);
-    const refreshToken = await this.generateRefreshToken({
-      id: user.id,
-      email: user.email,
-    });
+    const refreshToken = await this.generateRefreshToken(user);
 
     return new AuthResponseDto({
       accessToken,
@@ -62,12 +57,12 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
+        phone: user.phone,
         firstName: user.firstName,
         lastName: user.lastName,
+        isActive: user.isActive,
         isVerified: user.isVerified,
         languagePreference: user.languagePreference,
-        role: user.role,
-        permissions: user.permissions || [],
       },
     });
   }
@@ -95,8 +90,6 @@ export class AuthService {
     const payload: JwtPayload = {
       sub: newUser.id,
       email: newUser.email,
-      role: newUser.role,
-      permissions: newUser.permissions || [],
     };
 
     const accessToken = this.jwtService.sign(payload);
@@ -111,12 +104,12 @@ export class AuthService {
       user: {
         id: newUser.id,
         email: newUser.email,
+        phone: newUser.phone,
         firstName: newUser.firstName,
         lastName: newUser.lastName,
+        isActive: newUser.isActive,
         isVerified: newUser.isVerified,
         languagePreference: newUser.languagePreference,
-        role: newUser.role,
-        permissions: newUser.permissions || [],
       },
     });
   }
@@ -140,15 +133,10 @@ export class AuthService {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
-      role: user.role,
-      permissions: user.permissions || [],
     };
 
     const newAccessToken = this.jwtService.sign(payload);
-    const newRefreshToken = await this.generateRefreshToken({
-      id: user.id,
-      email: user.email,
-    });
+    const newRefreshToken = await this.generateRefreshToken(user);
 
     return new AuthResponseDto({
       accessToken: newAccessToken,
@@ -156,12 +144,12 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
+        phone: user.phone,
         firstName: user.firstName,
         lastName: user.lastName,
+        isActive: user.isActive,
         isVerified: user.isVerified,
         languagePreference: user.languagePreference,
-        role: user.role,
-        permissions: user.permissions || [],
       },
     });
   }

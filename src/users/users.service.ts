@@ -76,6 +76,12 @@ export class UsersService {
     id: number,
     updateUserDto: UpdateUserDto,
   ): Promise<UserResponseDto> {
+    console.log('UsersService.update: Получены данные:', updateUserDto);
+    console.log('UsersService.update: Тип данных:', typeof updateUserDto);
+    console.log('UsersService.update: Ключи:', Object.keys(updateUserDto));
+    console.log('UsersService.update: first_name:', updateUserDto.first_name);
+    console.log('UsersService.update: last_name:', updateUserDto.last_name);
+    
     const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException('Пользователь не найден');
@@ -95,12 +101,36 @@ export class UsersService {
       }
     }
 
-    await this.usersRepository.update(id, updateUserDto);
+    console.log('UsersService.update: Обновляем пользователя с ID:', id);
+    console.log('UsersService.update: Данные для обновления:', updateUserDto);
+    
+    // Преобразуем поля из snake_case в camelCase для TypeORM
+    const updateData: any = {};
+    if ('first_name' in updateUserDto) updateData.firstName = updateUserDto.first_name;
+    if ('last_name' in updateUserDto) updateData.lastName = updateUserDto.last_name;
+    if ('language_preference' in updateUserDto) updateData.languagePreference = updateUserDto.language_preference;
+    if ('is_active' in updateUserDto) updateData.isActive = updateUserDto.is_active;
+    if ('is_verified' in updateUserDto) updateData.isVerified = updateUserDto.is_verified;
+    if ('email' in updateUserDto) updateData.email = updateUserDto.email;
+    if ('phone' in updateUserDto) updateData.phone = updateUserDto.phone;
+    
+    console.log('UsersService.update: Преобразованные данные для TypeORM:', updateData);
+    console.log('UsersService.update: firstName в updateData:', updateData.firstName);
+    console.log('UsersService.update: lastName в updateData:', updateData.lastName);
+    
+    const updateResult = await this.usersRepository.update(id, updateData);
+    console.log('UsersService.update: Результат обновления:', updateResult);
+    
     const updatedUser = await this.usersRepository.findOne({ where: { id } });
+    console.log('UsersService.update: Пользователь после обновления:', updatedUser);
+    
     if (!updatedUser) {
       throw new NotFoundException('Пользователь не найден после обновления');
     }
-    return new UserResponseDto(updatedUser);
+    
+    const response = new UserResponseDto(updatedUser);
+    console.log('UsersService.update: Ответ для клиента:', response);
+    return response;
   }
 
   async remove(id: number): Promise<void> {

@@ -47,6 +47,21 @@ export class Bank {
   @Column({ type: 'text', name: 'payment_instructions_en' })
   paymentInstructionsEn: string;
 
+  @Column({ type: 'json', name: 'payment_steps_ru', nullable: true })
+  paymentStepsRu?: string[];
+
+  @Column({ type: 'json', name: 'payment_steps_en', nullable: true })
+  paymentStepsEn?: string[];
+
+  @Column({ type: 'json', name: 'screenshot_urls', nullable: true })
+  screenshotUrls?: string[];
+
+  @Column({ name: 'prepayment_percent', default: 10.0, nullable: true })
+  prepaymentPercent?: number;
+
+  @Column({ name: 'payment_timeout_minutes', default: 30, nullable: true })
+  paymentTimeoutMinutes?: number;
+
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 

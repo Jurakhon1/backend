@@ -25,7 +25,7 @@ export class UsersController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
+  async create(@Body(ValidationPipe) createUserDto: CreateUserDto): Promise<UserResponseDto> {
     return await this.usersService.create(createUserDto);
   }
 
@@ -44,8 +44,12 @@ export class UsersController {
   @Put(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body(ValidationPipe) updateUserDto: UpdateUserDto,
   ): Promise<UserResponseDto> {
+    console.log('UsersController.update: ID:', id);
+    console.log('UsersController.update: DTO:', updateUserDto);
+    console.log('UsersController.update: DTO keys:', Object.keys(updateUserDto));
+    console.log('UsersController.update: DTO type:', typeof updateUserDto);
     return await this.usersService.update(id, updateUserDto);
   }
 

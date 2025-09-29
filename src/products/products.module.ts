@@ -7,6 +7,13 @@ import { Category } from '../entities/category.entity';
 import { Brand } from '../entities/brand.entity';
 import { ProductVariant } from '../entities/product-variant.entity';
 import { ProductSpecification } from '../entities/product-specification.entity';
+import { ProductImage } from '../entities/product-image.entity';
+import { ProductVariantCombination } from '../entities/product-variant-combination.entity';
+
+import { ImageService } from '../shared/image.service';
+
+import { ProductColorImage } from '../entities/product-color-image.entity';
+
 
 @Module({
   imports: [
@@ -16,10 +23,13 @@ import { ProductSpecification } from '../entities/product-specification.entity';
       Brand,
       ProductVariant,
       ProductSpecification,
+      ProductImage,
+      ProductVariantCombination,
+      ProductColorImage,
     ]),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService],
+  providers: [ProductsService, ImageService],
   exports: [ProductsService],
 })
 export class ProductsModule {}

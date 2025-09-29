@@ -1,5 +1,13 @@
+import { IsNumber, IsString, IsOptional } from 'class-validator';
+
 export class CreatePaymentDto {
+  @IsNumber()
   order_id: number;
+
+  @IsNumber()
   bank_id: number;
-  receipt_image_url: string;
+
+  @IsOptional()
+  @IsString()
+  receipt_image_url?: string;
 }

@@ -107,6 +107,21 @@ export class CategoriesController {
     return await this.categoriesService.findBySlug(slug);
   }
 
+  @Get(':id/products')
+  @Public()
+  @ApiOperation({ summary: 'Получить продукты категории' })
+  @ApiParam({ name: 'id', type: 'number', description: 'ID категории' })
+  @ApiResponse({
+    status: 200,
+    description: 'Список продуктов категории',
+  })
+  @ApiResponse({ status: 404, description: 'Категория не найдена' })
+  async getCategoryProducts(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<any> {
+    return await this.categoriesService.getCategoryProducts(id);
+  }
+
   @Patch(':id')
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)

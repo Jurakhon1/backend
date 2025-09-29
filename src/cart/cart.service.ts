@@ -11,6 +11,7 @@ import { User } from '../entities/user.entity';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 import { CartItemResponseDto, CartResponseDto } from './dto/cart-response.dto';
+import { ImageService } from '../shared/image.service';
 
 @Injectable()
 export class CartService {
@@ -21,6 +22,7 @@ export class CartService {
     private productRepository: Repository<Product>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private imageService: ImageService,
   ) {}
 
   async addToCart(
@@ -36,6 +38,7 @@ export class CartService {
     // Проверяем существование продукта
     const product = await this.productRepository.findOne({
       where: { id: addToCartDto.product_id },
+      relations: ['brand', 'images'],
     });
     if (!product) {
       throw new NotFoundException('Товар не найден');
@@ -82,6 +85,19 @@ export class CartService {
         slug: product.slug,
         base_price: product.base_price,
         stock_quantity: product.stock_quantity,
+        brand: {
+          id: product.brand.id,
+          name_ru: product.brand.name,
+          name_en: product.brand.name,
+        },
+        images: product.images?.map(image => ({
+          id: image.id,
+          image_url: image.imageUrl,
+          alt_text_ru: image.altTextRu || '',
+          alt_text_en: image.altTextEn || '',
+          sort_order: image.sortOrder,
+          is_primary: image.isPrimary,
+        })) || [],
       },
       quantity: savedItem.quantity,
       price: savedItem.price,
@@ -94,7 +110,7 @@ export class CartService {
   async getCart(userId: number): Promise<CartResponseDto> {
     const cartItems = await this.cartRepository.find({
       where: { user: { id: userId } },
-      relations: ['product'],
+      relations: ['product', 'product.brand', 'product.images'],
       order: { createdAt: 'DESC' },
     });
 
@@ -109,6 +125,19 @@ export class CartService {
             slug: item.product.slug,
             base_price: item.product.base_price,
             stock_quantity: item.product.stock_quantity,
+            brand: {
+              id: item.product.brand.id,
+              name_ru: item.product.brand.name,
+              name_en: item.product.brand.name,
+            },
+            images: item.product.images?.map(image => ({
+              id: image.id,
+              image_url: image.imageUrl,
+              alt_text_ru: image.altTextRu || '',
+              alt_text_en: image.altTextEn || '',
+              sort_order: image.sortOrder,
+              is_primary: image.isPrimary,
+            })) || [],
           },
           quantity: item.quantity,
           price: item.price,
@@ -128,7 +157,7 @@ export class CartService {
   ): Promise<CartItemResponseDto> {
     const cartItem = await this.cartRepository.findOne({
       where: { id: itemId, user: { id: userId } },
-      relations: ['product'],
+      relations: ['product', 'product.brand', 'product.images'],
     });
 
     if (!cartItem) {
@@ -152,6 +181,19 @@ export class CartService {
         slug: cartItem.product.slug,
         base_price: cartItem.product.base_price,
         stock_quantity: cartItem.product.stock_quantity,
+        brand: {
+          id: cartItem.product.brand.id,
+          name_ru: cartItem.product.brand.name,
+          name_en: cartItem.product.brand.name,
+        },
+        images: cartItem.product.images?.map(image => ({
+          id: image.id,
+          image_url: image.imageUrl,
+          alt_text_ru: image.altTextRu || '',
+          alt_text_en: image.altTextEn || '',
+          sort_order: image.sortOrder,
+          is_primary: image.isPrimary,
+        })) || [],
       },
       quantity: savedItem.quantity,
       price: savedItem.price,

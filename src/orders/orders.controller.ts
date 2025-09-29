@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   HttpStatus,
   HttpCode,
+  ValidationPipe,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -21,7 +22,7 @@ export class OrdersController {
   @HttpCode(HttpStatus.CREATED)
   async createOrder(
     @Param('userId', ParseIntPipe) userId: number,
-    @Body() createOrderDto: CreateOrderDto,
+    @Body(ValidationPipe) createOrderDto: CreateOrderDto,
   ): Promise<OrderResponseDto> {
     return await this.ordersService.createOrder(userId, createOrderDto);
   }
@@ -51,6 +52,18 @@ export class OrdersController {
   @Post('cancel-expired')
   @HttpCode(HttpStatus.NO_CONTENT)
   async cancelExpiredOrders(): Promise<void> {
+    return await this.ordersService.cancelExpiredOrders();
+  }
+
+  @Post('cleanup-stuck')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async cleanupStuckOrders(): Promise<void> {
+    return await this.ordersService.cleanupStuckOrders();
+  }
+
+  @Post('cleanup-user-orders/:userId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async cleanupUserOrders(@Param('userId') userId: number): Promise<void> {
     return await this.ordersService.cancelExpiredOrders();
   }
 }

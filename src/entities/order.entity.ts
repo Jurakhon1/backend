@@ -153,7 +153,7 @@ export class Order {
 
   // Таймер оплаты
   @Column({ type: 'timestamp', nullable: true, name: 'payment_deadline' })
-  paymentDeadline: Date;
+  paymentDeadline: Date | null;
 
   @Column({ type: 'text', nullable: true })
   notes: string;
@@ -166,15 +166,6 @@ export class Order {
 
   @Column({ type: 'date', nullable: true, name: 'actual_delivery_date' })
   actualDeliveryDate: Date;
-
-  @Column({ nullable: true })
-  tracking_number: string;
-
-  @Column({ type: 'date', nullable: true })
-  estimated_delivery_date: Date;
-
-  @Column({ type: 'date', nullable: true })
-  actual_delivery_date: Date;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
     cascade: true,

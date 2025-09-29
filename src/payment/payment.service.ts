@@ -45,10 +45,23 @@ export class PaymentService {
           name_en: bank.nameEn,
           logo_url: bank.logoUrl,
           card_number: bank.cardNumber,
+          account_number: bank.accountNumber,
           recipient_name: bank.recipientName,
+          recipient_inn: bank.recipientInn,
+          bank_bik: bank.bankBik,
+          bank_name: bank.bankName,
+          bank_address: bank.bankAddress,
           payment_instructions_ru: bank.paymentInstructionsRu,
           payment_instructions_en: bank.paymentInstructionsEn,
+          payment_steps_ru: bank.paymentStepsRu,
+          payment_steps_en: bank.paymentStepsEn,
+          screenshot_urls: bank.screenshotUrls,
+          prepayment_percent: bank.prepaymentPercent,
+          payment_timeout_minutes: bank.paymentTimeoutMinutes,
+          is_active: bank.isActive,
           sort_order: bank.sortOrder,
+          created_at: bank.createdAt,
+          updated_at: bank.updatedAt,
         }),
     );
   }
@@ -223,6 +236,30 @@ export class PaymentService {
     return transactions.map((transaction) =>
       this.buildTransactionResponse(transaction, transaction.bank),
     );
+  }
+
+  async uploadReceipt(
+    transactionId: number,
+    receiptImageUrl: string,
+  ): Promise<PaymentTransactionResponseDto> {
+    const transaction = await this.transactionRepository.findOne({
+      where: { id: transactionId },
+      relations: ['bank'],
+    });
+
+    if (!transaction) {
+      throw new NotFoundException('Транзакция не найдена');
+    }
+
+    if (transaction.status !== TransactionStatus.PENDING) {
+      throw new ConflictException('Транзакция уже обработана');
+    }
+
+    // Обновляем транзакцию с URL чека
+    transaction.receiptImageUrl = receiptImageUrl;
+    const savedTransaction = await this.transactionRepository.save(transaction);
+
+    return this.buildTransactionResponse(savedTransaction, transaction.bank);
   }
 
   private buildTransactionResponse(

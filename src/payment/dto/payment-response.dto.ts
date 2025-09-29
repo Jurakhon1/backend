@@ -9,10 +9,23 @@ export class BankResponseDto {
   name_en: string;
   logo_url?: string;
   card_number: string;
+  account_number?: string;
   recipient_name: string;
+  recipient_inn?: string;
+  bank_bik?: string;
+  bank_name: string;
+  bank_address?: string;
   payment_instructions_ru: string;
   payment_instructions_en: string;
+  payment_steps_ru?: string[];
+  payment_steps_en?: string[];
+  screenshot_urls?: string[];
+  prepayment_percent?: number;
+  payment_timeout_minutes?: number;
+  is_active: boolean;
   sort_order: number;
+  created_at: Date;
+  updated_at: Date;
 
   constructor(partial: Partial<BankResponseDto>) {
     Object.assign(this, partial);

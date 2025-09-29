@@ -21,7 +21,7 @@
 - is_featured: boolean            // Рекомендуемый
 - min_stock_level: int            // Минимальный остаток
 - meta_title_ru/en: string        // SEO заголовки
-- meta_description_ru/en: text    // SEO описания
+- meta_description_ru/en: text    // SEO описания                                  
 - updated_at: timestamp           // Дата обновления
 ```
 

@@ -8,6 +8,8 @@ import { Product } from '../entities/product.entity';
 import { ProductImage } from '../entities/product-image.entity';
 import { ProductSpecification } from '../entities/product-specification.entity';
 import { ProductVariant } from '../entities/product-variant.entity';
+import { ProductVariantCombination } from '../entities/product-variant-combination.entity';
+import { ProductColorImage } from '../entities/product-color-image.entity';
 import { ProductRelation } from '../entities/product-relation.entity';
 import { UserAddress } from '../entities/user-address.entity';
 import { UserSocialAccount } from '../entities/user-social-account.entity';
@@ -37,51 +39,30 @@ import { RefreshToken } from '../entities/refresh-token.entity';
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DB_HOST || '147.45.157.26',
-      port: parseInt(process.env.DB_PORT || '3306'),
-      username: process.env.DB_USERNAME || 'gen_user',
-      password: process.env.DB_PASSWORD || '4rX&cHtw:uy&,l',
-      database: process.env.DB_DATABASE || 'phone_store_db',
-      entities: [
-        User,
-        Category,
-        Brand,
-        Product,
-        ProductImage,
-        ProductSpecification,
-        ProductVariant,
-        ProductRelation,
-        UserAddress,
-        UserSocialAccount,
-        CartItem,
-        Order,
-        OrderItem,
-        Bank,
-        PickupPoint,
-        PaymentTransaction,
-        BonusTransaction,
-        PromoCode,
-        PromoCodeUsage,
-        Review,
-        ReviewHelpfulness,
-        WishlistItem,
-        ProductComparison,
-        Notification,
-        Admin,
-        AppSetting,
-        RefreshToken,
-      ],
-      synchronize: true, // Автоматическое создание таблиц
+      host: '147.45.157.26',
+      port: 3306,
+      username: 'gen_user',
+      password: '4rX&cHtw:uy&,l',
+      database: 'phone_store_db',
+      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+      synchronize: false, // Отключаем автоматическое создание таблиц
       logging: true,
       charset: 'utf8mb4',
       timezone: '+00:00',
       // Настройки для стабильности соединения
       extra: {
         connectionLimit: 10,
+        acquireTimeout: 60000,
+        timeout: 60000,
+        reconnect: true,
+        idleTimeout: 300000,
+        keepAliveInitialDelay: 0,
+        enableKeepAlive: true,
       },
       // Автоматическое переподключение
-      retryAttempts: 3,
-      retryDelay: 3000,
+      retryAttempts: 5,
+      retryDelay: 5000,
+      autoLoadEntities: true,
     }),
   ],
 })

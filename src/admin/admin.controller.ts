@@ -22,9 +22,6 @@ import {
 } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { Permissions, Permission } from '../auth/decorators/permissions.decorator';
-import { UserRole } from '../entities/user.entity';
 import {
   AdminStatsDto,
   UserStatsDto,
@@ -40,7 +37,6 @@ import {
 @ApiBearerAuth('JWT-auth')
 @Controller('admin')
 @UseGuards(JwtAuthGuard)
-@Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.MANAGER)
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
@@ -126,7 +122,6 @@ export class AdminController {
   }
 
   @Get('users')
-  @Permissions(Permission.USERS_READ)
   @ApiOperation({ summary: 'Получить список всех пользователей' })
   @ApiQuery({
     name: 'limit',

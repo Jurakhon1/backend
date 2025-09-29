@@ -7,6 +7,19 @@ export class CartItemResponseDto {
     slug: string;
     base_price: number;
     stock_quantity: number;
+    brand: {
+      id: number;
+      name_ru: string;
+      name_en: string;
+    };
+    images: {
+      id: number;
+      image_url: string;
+      alt_text_ru: string;
+      alt_text_en: string;
+      sort_order: number;
+      is_primary: boolean;
+    }[];
   };
   quantity: number;
   price: number;

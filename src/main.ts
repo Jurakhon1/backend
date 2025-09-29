@@ -2,9 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { DatabaseErrorFilter } from './database/database-error.filter';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Глобальные Validation Pipes
   app.useGlobalPipes(
@@ -21,7 +24,13 @@ async function bootstrap() {
     credentials: true,
   });
 
-  
+  // Статические файлы для изображений
+  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+    prefix: '/uploads/',
+  });
+
+  // Глобальный фильтр для ошибок базы данных
+  app.useGlobalFilters(new DatabaseErrorFilter());
 
   // Swagger документация
   const config = new DocumentBuilder()
@@ -59,8 +68,8 @@ async function bootstrap() {
     },
   });
 
-  const port = process.env.PORT ?? 8181;
-  await app.listen(8181,);
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port);
 
   console.log(`🚀 Сервер запущен на http://localhost:${port}`);
   console.log(`📚 Swagger документация: http://localhost:${port}/api`);

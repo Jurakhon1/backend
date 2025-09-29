@@ -13,7 +13,9 @@ import { Brand } from './brand.entity';
 import { ProductImage } from './product-image.entity';
 import { ProductSpecification } from './product-specification.entity';
 import { ProductVariant } from './product-variant.entity';
+import { ProductVariantCombination } from './product-variant-combination.entity';
 import { Review } from './review.entity';
+import { ProductColorImage } from './product-color-image.entity';
 
 @Entity('products')
 export class Product {
@@ -46,17 +48,23 @@ export class Product {
   @OneToMany(() => ProductVariant, (variant) => variant.product)
   variants: ProductVariant[];
 
+  @OneToMany(
+    () => ProductVariantCombination,
+    (combination) => combination.product,
+  )
+  variantCombinations: ProductVariantCombination[];
+
   @OneToMany(() => Review, (review) => review.product)
   reviews: Review[];
+
+  @OneToMany(() => ProductColorImage, (colorImage) => colorImage.product)
+  colorImages: ProductColorImage[];
 
   @Column({ nullable: true })
   model: string;
 
   @Column({ unique: true })
   sku: string;
-
-  @Column({ nullable: true })
-  barcode: string;
 
   @Column({ type: 'text', nullable: true })
   description_ru: string;
@@ -74,23 +82,10 @@ export class Product {
   base_price: number;
 
   @Column('decimal', { precision: 10, scale: 2, nullable: true })
-  discount_price: number;
+  sale_price: number;
 
   @Column({ default: 'RUB' })
   currency: string;
-
-  // Добавляем недостающие поля для совместимости с Frontend
-  @Column('decimal', { precision: 2, scale: 1, nullable: true, default: 0.0 })
-  rating: number;
-
-  @Column('int', { default: 0 })
-  review_count: number;
-
-  @Column('int')
-  category_id: number;
-
-  @Column('int', { nullable: true })
-  brand_id: number;
 
   @Column('decimal', { precision: 8, scale: 2, nullable: true })
   weight: number; // в граммах

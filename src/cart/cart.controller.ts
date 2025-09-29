@@ -10,6 +10,7 @@ import {
   HttpStatus,
   HttpCode,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -43,7 +44,7 @@ export class CartController {
   @ApiResponse({ status: 409, description: 'Недостаточно товара на складе' })
   async addToCart(
     @CurrentUser() user: any,
-    @Body() addToCartDto: AddToCartDto,
+    @Body(ValidationPipe) addToCartDto: AddToCartDto,
   ): Promise<CartItemResponseDto> {
     return await this.cartService.addToCart(user.id, addToCartDto);
   }
@@ -63,7 +64,7 @@ export class CartController {
   async updateCartItem(
     @CurrentUser() user: any,
     @Param('itemId', ParseIntPipe) itemId: number,
-    @Body() updateDto: UpdateCartItemDto,
+    @Body(ValidationPipe) updateDto: UpdateCartItemDto,
   ): Promise<CartItemResponseDto> {
     return await this.cartService.updateCartItem(user.id, itemId, updateDto);
   }

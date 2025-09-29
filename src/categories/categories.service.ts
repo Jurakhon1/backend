@@ -191,4 +191,88 @@ export class CategoriesService {
       updatedAt: category.updatedAt,
     };
   }
+
+  async getCategoryProducts(categoryId: number): Promise<any> {
+    const category = await this.categoryRepository.findOne({
+      where: { id: categoryId },
+    });
+
+    if (!category) {
+      throw new NotFoundException('Категория не найдена');
+    }
+
+    // Получаем продукты через SQL запрос для лучшей производительности
+    const products = await this.categoryRepository.query(
+      `
+      SELECT 
+        p.id,
+        p.name_ru,
+        p.name_en,
+        p.slug,
+        p.model,
+        p.sku,
+        p.base_price,
+        p.sale_price,
+        p.currency,
+        p.description_ru,
+        p.description_en,
+        p.short_description_ru,
+        p.short_description_en,
+        p.weight,
+        p.dimensions,
+        p.warranty_months,
+        p.stock_quantity,
+        p.min_stock_level,
+        p.is_active,
+        p.is_featured,
+        p.meta_title_ru,
+        p.meta_title_en,
+        p.meta_description_ru,
+        p.meta_description_en,
+        p.created_at,
+        p.updated_at,
+        JSON_OBJECT(
+          'id', c.id,
+          'name', JSON_OBJECT('ru', c.name_ru, 'en', c.name_en),
+          'name_ru', c.name_ru,
+          'name_en', c.name_en,
+          'slug', c.slug
+        ) as category,
+        JSON_OBJECT(
+          'id', b.id,
+          'name', b.name,
+          'slug', b.slug
+        ) as brand
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
+      LEFT JOIN brands b ON p.brand_id = b.id
+      WHERE p.category_id = ? AND p.is_active = true
+      ORDER BY p.created_at DESC
+    `,
+      [categoryId],
+    );
+
+    return {
+      category: {
+        id: category.id,
+        nameRu: category.nameRu,
+        nameEn: category.nameEn,
+        slug: category.slug,
+        descriptionRu: category.descriptionRu,
+        descriptionEn: category.descriptionEn,
+        iconUrl: category.iconUrl,
+        imageUrl: category.imageUrl,
+        isActive: category.isActive,
+        sortOrder: category.sortOrder,
+        metaTitleRu: category.metaTitleRu,
+        metaTitleEn: category.metaTitleEn,
+        metaDescriptionRu: category.metaDescriptionRu,
+        metaDescriptionEn: category.metaDescriptionEn,
+        createdAt: category.createdAt,
+        updatedAt: category.updatedAt,
+      },
+      products: products,
+      total: products.length,
+    };
+  }
 }

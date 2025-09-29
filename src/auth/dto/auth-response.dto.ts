@@ -1,6 +1,5 @@
 import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole } from '../../entities/user.entity';
 
 export class AuthResponseDto {
   accessToken: string;
@@ -8,12 +7,12 @@ export class AuthResponseDto {
   user: {
     id: number;
     email: string;
+    phone?: string;
     firstName: string;
     lastName: string;
+    isActive: boolean;
     isVerified: boolean;
     languagePreference: string;
-    role: UserRole;
-    permissions: string[];
   };
 
   constructor(partial: Partial<AuthResponseDto>) {
