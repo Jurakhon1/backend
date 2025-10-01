@@ -10,10 +10,9 @@ import { ProductSpecification } from '../entities/product-specification.entity';
 import { ProductImage } from '../entities/product-image.entity';
 import { ProductVariantCombination } from '../entities/product-variant-combination.entity';
 
-import { ImageService } from '../shared/image.service';
+import { ImageService } from '../services/image.service';
 
 import { ProductColorImage } from '../entities/product-color-image.entity';
-
 
 @Module({
   imports: [

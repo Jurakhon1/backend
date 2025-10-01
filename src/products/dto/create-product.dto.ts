@@ -52,12 +52,12 @@ export class CreateProductDto {
   sku: string;
 
   @ApiProperty({ description: 'Базовая цена' })
-  @IsDecimal()
+  @IsNumber()
   base_price: number;
 
   @ApiProperty({ description: 'Цена со скидкой', required: false })
   @IsOptional()
-  @IsDecimal()
+  @IsNumber()
   sale_price?: number;
 
   @ApiProperty({ description: 'Валюта', default: 'RUB' })
@@ -90,7 +90,7 @@ export class CreateProductDto {
 
   @ApiProperty({ description: 'Вес в граммах', required: false })
   @IsOptional()
-  @IsDecimal()
+  @IsNumber()
   weight?: number;
 
   @ApiProperty({ description: 'Размеры', required: false })

@@ -1,0 +1,37 @@
+{
+  "name_ru": "iPad Pro 12.9\" 256GB Wi-Fi",
+  "name_en": "iPad Pro 12.9\" 256GB Wi-Fi",
+  "description_ru": "iPad Pro 12.9\" с чипом M3, 12.9-дюймовым дисплеем Liquid Retina XDR, поддержкой Apple Pencil 2, Magic Keyboard и Thunderbolt портом для профессиональной работы.",
+  "description_en": "iPad Pro 12.9\" with M3 chip, 12.9-inch Liquid Retina XDR display, Apple Pencil 2 support, Magic Keyboard and Thunderbolt port for professional work.",
+  "base_price": "89990.00",
+  "sale_price": "84990.00",
+  "category_id": 2,
+  "brand_id": 1,
+  "is_active": true,
+  "is_featured": true,
+  "stock_quantity": 6,
+  "sku": "APPLE-IPAD-PRO-129-256-WIFI",
+  "weight": "682.00",
+  "dimensions": "280.6 x 214.9 x 6.4 мм",
+  "variants": [
+    {
+      "variantName": {
+        "ru": "Цвет",
+        "en": "Color"
+      },
+      "variantType": "color",
+      "variantValue": {
+        "ru": "Белый",
+        "en": "White"
+      },
+      "colorCode": "#FFFFFF",
+      "priceModifier": 0,
+      "stockQuantity": 0,
+      "skuSuffix": "",
+      "isActive": true,
+      "sortOrder": 0
+    }
+  ],
+  "specifications": []
+}
+

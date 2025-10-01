@@ -3,6 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { DatabaseErrorFilter } from './database/database-error.filter';
+import { ServiceErrorFilter } from './database/service-error.filter';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 
@@ -29,8 +30,8 @@ async function bootstrap() {
     prefix: '/uploads/',
   });
 
-  // Глобальный фильтр для ошибок базы данных
-  app.useGlobalFilters(new DatabaseErrorFilter());
+  // Глобальные фильтры для обработки ошибок
+  app.useGlobalFilters(new DatabaseErrorFilter(), new ServiceErrorFilter());
 
   // Swagger документация
   const config = new DocumentBuilder()

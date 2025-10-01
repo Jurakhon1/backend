@@ -16,6 +16,7 @@ import { WishlistModule } from './wishlist/wishlist.module';
 import { BonusModule } from './bonus/bonus.module';
 import { PromoModule } from './promo/promo.module';
 import { AdminModule } from './admin/admin.module';
+import { AdminAuthModule } from './admin-auth/admin-auth.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { AppSettingsModule } from './app-settings/app-settings.module';
 import { AddressesModule } from './addresses/addresses.module';
@@ -37,6 +38,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     BonusModule,
     PromoModule,
     AdminModule,
+    AdminAuthModule,
     NotificationsModule,
     AppSettingsModule,
     AddressesModule,

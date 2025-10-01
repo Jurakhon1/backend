@@ -1,0 +1,24 @@
+{
+  "name_ru": "Test Product with Variants",
+  "base_price": 1000.0,
+  "variants": [
+    {
+      "variantName": {
+        "ru": "Цвет",
+        "en": "Color"
+      },
+      "variantType": "color",
+      "variantValue": {
+        "ru": "Белый",
+        "en": "White"
+      },
+      "colorCode": "#FFFFFF",
+      "priceModifier": 0,
+      "stockQuantity": 0,
+      "skuSuffix": "",
+      "isActive": true,
+      "sortOrder": 0
+    }
+  ]
+}
+

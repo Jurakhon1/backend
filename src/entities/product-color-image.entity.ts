@@ -12,7 +12,10 @@ import { Product } from './product.entity';
 import { ProductVariant } from './product-variant.entity';
 
 @Entity('product_color_images')
-@Index(['product_id', 'variant_id'], { unique: true })
+@Index(['product_id', 'variant_id'], {
+  unique: true,
+  where: 'variant_id IS NOT NULL',
+})
 export class ProductColorImage {
   @PrimaryGeneratedColumn()
   id: number;
@@ -20,13 +23,13 @@ export class ProductColorImage {
   @Column()
   product_id: number;
 
-  @Column()
-  variant_id: number;
+  @Column({ nullable: true })
+  variant_id: number | null;
 
-  @Column({ length: 500 })
+  @Column({ type: 'text' })
   primary_image_url: string;
 
-  @Column({ length: 500, nullable: true })
+  @Column({ type: 'text', nullable: true })
   thumbnail_url: string;
 
   @Column({ type: 'json', nullable: true })

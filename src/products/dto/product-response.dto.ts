@@ -87,6 +87,9 @@ export class ProductResponseDto {
   @ApiProperty({ type: () => LocalizedContentDto })
   name: LocalizedContentDto;
 
+  @ApiProperty({ description: 'Локализованное название (на основе языка запроса)' })
+  localized_name: string;
+
   @ApiProperty()
   slug: string;
 
@@ -100,6 +103,7 @@ export class ProductResponseDto {
   category: {
     id: number;
     name: LocalizedContentDto;
+    localized_name: string;
     name_ru: string;
     name_en: string;
     slug: string;
@@ -124,8 +128,14 @@ export class ProductResponseDto {
   @ApiProperty({ type: () => LocalizedContentDto, required: false })
   description?: LocalizedContentDto;
 
+  @ApiProperty({ description: 'Локализованное описание (на основе языка запроса)', required: false })
+  localized_description?: string;
+
   @ApiProperty({ type: () => LocalizedContentDto, required: false })
   short_description?: LocalizedContentDto;
+
+  @ApiProperty({ description: 'Локализованное краткое описание (на основе языка запроса)', required: false })
+  localized_short_description?: string;
 
   @ApiProperty({ required: false })
   weight?: number;

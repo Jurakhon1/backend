@@ -1,14 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
+import { IsOptional, IsBoolean } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 
 export class ProductQueryDto {
   @ApiProperty({
     description: 'Включить варианты',
-    default: true,
+    default: false,
     required: false,
   })
   @IsOptional()
-  includeVariants?: boolean = true;
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
+  @Type(() => Boolean)
+  includeVariants?: boolean;
 
   @ApiProperty({
     description: 'Включить комбинации вариантов',
@@ -16,21 +23,48 @@ export class ProductQueryDto {
     required: false,
   })
   @IsOptional()
-  includeVariantCombinations?: boolean = false;
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
+  @Type(() => Boolean)
+  includeVariantCombinations?: boolean;
 
   @ApiProperty({
     description: 'Включить характеристики',
-    default: true,
+    default: false,
     required: false,
   })
   @IsOptional()
-  includeSpecifications?: boolean = true;
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
+  @Type(() => Boolean)
+  includeSpecifications?: boolean;
 
   @ApiProperty({
     description: 'Включить изображения',
-    default: true,
+    default: false,
     required: false,
   })
   @IsOptional()
-  includeImages?: boolean = true;
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
+  @Type(() => Boolean)
+  includeImages?: boolean;
+
+  @ApiProperty({
+    description: 'Язык интерфейса',
+    default: 'ru',
+    required: false,
+    enum: ['ru', 'en'],
+  })
+  @IsOptional()
+  lang?: 'ru' | 'en';
 }

@@ -1,114 +1,151 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsEnum,
-  IsOptional,
-  IsNumber,
-  IsBoolean,
-  IsHexColor,
-} from 'class-validator';
-
-export enum VariantType {
-  COLOR = 'color',
-  MEMORY = 'memory',
-  STORAGE = 'storage',
-  SIZE = 'size',
-  OTHER = 'other',
-}
+import { IsString, IsNumber, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateProductVariantDto {
-  @ApiProperty({ description: 'Название варианта на русском' })
+  @ApiProperty({ example: 1, description: 'ID продукта' })
+  @IsNumber()
+  product_id: number;
+
+  @ApiProperty({ example: 'Красный', description: 'Название варианта' })
   @IsString()
-  variantNameRu: string;
+  name: string;
 
-  @ApiProperty({ description: 'Название варианта на английском' })
-  @IsString()
-  variantNameEn: string;
-
-  @ApiProperty({ description: 'Тип варианта', enum: VariantType })
-  @IsEnum(VariantType)
-  variantType: VariantType;
-
-  @ApiProperty({ description: 'Значение варианта на русском' })
-  @IsString()
-  variantValueRu: string;
-
-  @ApiProperty({ description: 'Значение варианта на английском' })
-  @IsString()
-  variantValueEn: string;
-
-  @ApiProperty({ description: 'Hex код цвета', required: false })
+  @ApiProperty({
+    example: '#FF0000',
+    description: 'Код цвета (HEX)',
+    required: false,
+  })
   @IsOptional()
-  @IsHexColor()
+  @IsString()
   colorCode?: string;
 
-  @ApiProperty({ description: 'Дополнительная стоимость', default: 0 })
-  @IsOptional()
-  @IsNumber()
-  priceModifier?: number = 0;
-
-  @ApiProperty({ description: 'Количество на складе', default: 0 })
-  @IsOptional()
-  @IsNumber()
-  stockQuantity?: number = 0;
-
-  @ApiProperty({ description: 'Суффикс для SKU', required: false })
+  @ApiProperty({
+    example: 'red',
+    description: 'Код цвета (текстовый)',
+    required: false,
+  })
   @IsOptional()
   @IsString()
-  skuSuffix?: string;
+  colorName?: string;
 
-  @ApiProperty({ description: 'Активен ли вариант', default: true })
-  @IsOptional()
-  @IsBoolean()
-  isActive?: boolean = true;
-
-  @ApiProperty({ description: 'Порядок сортировки', default: 0 })
+  @ApiProperty({
+    example: 100,
+    description: 'Дополнительная цена',
+    required: false,
+  })
   @IsOptional()
   @IsNumber()
-  sortOrder?: number = 0;
+  price_adjustment?: number;
+
+  @ApiProperty({
+    example: 50,
+    description: 'Остаток на складе',
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber()
+  stock_quantity?: number;
+
+  @ApiProperty({
+    example: true,
+    description: 'Активен ли вариант',
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  is_active?: boolean;
+}
+
+export class UpdateProductVariantDto {
+  @ApiProperty({
+    example: 'Синий',
+    description: 'Название варианта',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiProperty({
+    example: '#0000FF',
+    description: 'Код цвета (HEX)',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  colorCode?: string;
+
+  @ApiProperty({
+    example: 'blue',
+    description: 'Код цвета (текстовый)',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  colorName?: string;
+
+  @ApiProperty({
+    example: 150,
+    description: 'Дополнительная цена',
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber()
+  price_adjustment?: number;
+
+  @ApiProperty({
+    example: 75,
+    description: 'Остаток на складе',
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber()
+  stock_quantity?: number;
+
+  @ApiProperty({
+    example: false,
+    description: 'Активен ли вариант',
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  is_active?: boolean;
 }
 
 export class ProductVariantResponseDto {
-  @ApiProperty()
+  @ApiProperty({ example: 1, description: 'ID варианта' })
   id: number;
 
-  @ApiProperty()
-  variantNameRu: string;
+  @ApiProperty({ example: 1, description: 'ID продукта' })
+  product_id: number;
 
-  @ApiProperty()
-  variantNameEn: string;
+  @ApiProperty({ example: 'Красный', description: 'Название варианта' })
+  name: string;
 
-  @ApiProperty({ enum: VariantType })
-  variantType: VariantType;
-
-  @ApiProperty()
-  variantValueRu: string;
-
-  @ApiProperty()
-  variantValueEn: string;
-
-  @ApiProperty({ required: false })
+  @ApiProperty({ example: '#FF0000', description: 'Код цвета (HEX)' })
   colorCode?: string;
 
-  @ApiProperty()
-  priceModifier: number;
+  @ApiProperty({ example: 'red', description: 'Код цвета (текстовый)' })
+  colorName?: string;
 
-  @ApiProperty()
-  stockQuantity: number;
+  @ApiProperty({ example: 100, description: 'Дополнительная цена' })
+  price_adjustment?: number;
 
-  @ApiProperty({ required: false })
-  skuSuffix?: string;
+  @ApiProperty({ example: 50, description: 'Остаток на складе' })
+  stock_quantity?: number;
 
-  @ApiProperty()
-  isActive: boolean;
+  @ApiProperty({ example: true, description: 'Активен ли вариант' })
+  is_active: boolean;
 
-  @ApiProperty()
-  sortOrder: number;
+  @ApiProperty({
+    example: '2024-01-01T00:00:00.000Z',
+    description: 'Дата создания',
+  })
+  created_at: Date;
 
-  @ApiProperty()
-  createdAt: Date;
-
-  constructor(partial: Partial<ProductVariantResponseDto>) {
-    Object.assign(this, partial);
-  }
+  @ApiProperty({
+    example: '2024-01-01T00:00:00.000Z',
+    description: 'Дата обновления',
+  })
+  updated_at: Date;
 }

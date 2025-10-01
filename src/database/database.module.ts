@@ -39,22 +39,19 @@ import { RefreshToken } from '../entities/refresh-token.entity';
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '147.45.157.26',
-      port: 3306,
-      username: 'gen_user',
-      password: '4rX&cHtw:uy&,l',
-      database: 'phone_store_db',
+      host: process.env.DB_HOST || '147.45.157.26',
+      port: parseInt(process.env.DB_PORT || '3306'),
+      username: process.env.DB_USERNAME || 'gen_user',
+      password: process.env.DB_PASSWORD || '4rX&cHtw:uy&,l',
+      database: process.env.DB_DATABASE || 'phone_store_db',
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],
       synchronize: false, // Отключаем автоматическое создание таблиц
-      logging: true,
+      logging: process.env.NODE_ENV === 'development',
       charset: 'utf8mb4',
       timezone: '+00:00',
       // Настройки для стабильности соединения
       extra: {
         connectionLimit: 10,
-        acquireTimeout: 60000,
-        timeout: 60000,
-        reconnect: true,
         idleTimeout: 300000,
         keepAliveInitialDelay: 0,
         enableKeepAlive: true,
