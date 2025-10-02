@@ -55,10 +55,13 @@ export class PaymentTransaction {
   status: TransactionStatus;
 
   @Column({ name: 'receipt_image_url', nullable: true })
-  receiptImageUrl: string;
+  receiptImageUrl: string | null;
+
+  @Column({ type: 'longtext', nullable: true, name: 'receipt_image_base64' })
+  receiptImageBase64: string | null;
 
   @Column({ type: 'text', nullable: true, name: 'admin_notes' })
-  adminNotes: string;
+  adminNotes: string | null;
 
   @ManyToOne(() => Admin, { nullable: true })
   @JoinColumn({ name: 'confirmed_by' })

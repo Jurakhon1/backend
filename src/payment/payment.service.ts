@@ -262,6 +262,52 @@ export class PaymentService {
     return this.buildTransactionResponse(savedTransaction, transaction.bank);
   }
 
+  async uploadReceiptBase64(
+    transactionId: number,
+    base64Image: string,
+    fileExtension: string,
+  ): Promise<PaymentTransactionResponseDto> {
+    const transaction = await this.transactionRepository.findOne({
+      where: { id: transactionId },
+      relations: ['bank'],
+    });
+
+    if (!transaction) {
+      throw new NotFoundException('Транзакция не найдена');
+    }
+
+    if (transaction.status !== TransactionStatus.PENDING) {
+      throw new ConflictException('Транзакция уже обработана');
+    }
+
+    // Валидация расширения файла
+    const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+    if (!allowedExtensions.includes(fileExtension.toLowerCase())) {
+      throw new BadRequestException('Неподдерживаемый формат файла. Разрешены: jpg, jpeg, png, gif');
+    }
+
+    // Валидация base64 данных
+    if (!base64Image || base64Image.trim() === '') {
+      throw new BadRequestException('Base64 данные не могут быть пустыми');
+    }
+
+    // Убираем data:image/...;base64, префикс если есть
+    const cleanBase64 = base64Image.replace(/^data:image\/[a-z]+;base64,/, '');
+    
+    // Проверяем, что это валидный base64
+    const base64Regex = /^[A-Za-z0-9+/]*={0,2}$/;
+    if (!base64Regex.test(cleanBase64)) {
+      throw new BadRequestException('Некорректные base64 данные');
+    }
+
+    // Обновляем транзакцию с base64 данными чека
+    transaction.receiptImageBase64 = cleanBase64;
+    transaction.receiptImageUrl = null; // Очищаем URL, так как теперь используем base64
+    const savedTransaction = await this.transactionRepository.save(transaction);
+
+    return this.buildTransactionResponse(savedTransaction, transaction.bank);
+  }
+
   private buildTransactionResponse(
     transaction: PaymentTransaction,
     bank: Bank,
@@ -284,6 +330,7 @@ export class PaymentService {
       amount: transaction.amount,
       status: transaction.status,
       receipt_image_url: transaction.receiptImageUrl,
+      receipt_image_base64: transaction.receiptImageBase64,
       admin_notes: transaction.adminNotes,
       confirmed_at: transaction.confirmedAt,
       created_at: transaction.createdAt,

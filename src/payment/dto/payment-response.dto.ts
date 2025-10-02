@@ -39,7 +39,8 @@ export class PaymentTransactionResponseDto {
   transaction_type: TransactionType;
   amount: number;
   status: TransactionStatus;
-  receipt_image_url?: string;
+  receipt_image_url?: string | null;
+  receipt_image_base64?: string | null;
   admin_notes?: string | null;
   confirmed_at?: Date;
   created_at: Date;

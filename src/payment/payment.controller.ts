@@ -18,6 +18,7 @@ import { extname } from 'path';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UploadReceiptDto } from './dto/upload-receipt.dto';
+import { UploadReceiptBase64Dto } from './dto/upload-receipt-base64.dto';
 import {
   BankResponseDto,
   PaymentTransactionResponseDto,
@@ -132,5 +133,18 @@ export class PaymentController {
 
     const imageUrl = `/uploads/receipts/${file.filename}`;
     return await this.paymentService.uploadReceipt(transactionId, imageUrl);
+  }
+
+  @Post('transactions/:transactionId/upload-receipt-base64')
+  @HttpCode(HttpStatus.OK)
+  async uploadReceiptBase64(
+    @Param('transactionId', ParseIntPipe) transactionId: number,
+    @Body() uploadReceiptBase64Dto: UploadReceiptBase64Dto,
+  ): Promise<PaymentTransactionResponseDto> {
+    return await this.paymentService.uploadReceiptBase64(
+      transactionId,
+      uploadReceiptBase64Dto.base64_image,
+      uploadReceiptBase64Dto.file_extension,
+    );
   }
 }
