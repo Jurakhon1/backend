@@ -74,5 +74,7 @@ async function bootstrap() {
 
   console.log(`🚀 Сервер запущен на http://localhost:${port}`);
   console.log(`📚 Swagger документация: http://localhost:${port}/api`);
+  console.log(`💾 База данных: ${process.env.DB_HOST || '147.45.157.26'}:${process.env.DB_PORT || '3306'}`);
+  console.log(`📱 Поддержка Base64 чеков: включена`);
 }
 bootstrap();
