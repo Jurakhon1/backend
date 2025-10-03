@@ -161,6 +161,33 @@ export class PaymentService {
     );
   }
 
+  async getActiveOrderTransaction(
+    orderId: number,
+  ): Promise<PaymentTransactionResponseDto | null> {
+    const transaction = await this.transactionRepository.findOne({
+      where: { 
+        order: { id: orderId },
+        status: TransactionStatus.PENDING,
+      },
+      relations: ['bank'],
+    });
+
+    if (!transaction) {
+      return null;
+    }
+
+    // Проверяем, не истекла ли транзакция
+    const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
+    if (transaction.createdAt < thirtyMinutesAgo) {
+      console.log(`PaymentService: Старая PENDING транзакция ${transaction.id} обновлена на EXPIRED`);
+      transaction.status = TransactionStatus.EXPIRED;
+      await this.transactionRepository.save(transaction);
+      return null;
+    }
+
+    return this.buildTransactionResponse(transaction, transaction.bank);
+  }
+
   async confirmPayment(
     transactionId: number,
     adminId: number,

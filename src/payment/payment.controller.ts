@@ -58,6 +58,14 @@ export class PaymentController {
     return await this.paymentService.getOrderTransactions(orderId);
   }
 
+  @Get('orders/:orderId/active-transaction')
+  @HttpCode(HttpStatus.OK)
+  async getActiveOrderTransaction(
+    @Param('orderId', ParseIntPipe) orderId: number,
+  ): Promise<PaymentTransactionResponseDto | null> {
+    return await this.paymentService.getActiveOrderTransaction(orderId);
+  }
+
   @Get('transactions/pending')
   async getPendingTransactions(): Promise<PaymentTransactionResponseDto[]> {
     return await this.paymentService.getPendingTransactions();
