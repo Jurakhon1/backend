@@ -54,7 +54,7 @@ export class PaymentTransaction {
   })
   status: TransactionStatus;
 
-  @Column({ name: 'receipt_image_url', nullable: true })
+  @Column({ type: 'varchar', length: 500, nullable: true, name: 'receipt_image_url' })
   receiptImageUrl: string | null;
 
   @Column({ type: 'longtext', nullable: true, name: 'receipt_image_base64' })
