@@ -43,6 +43,7 @@ export class PaymentController {
     return await this.paymentService.getBank(bankId);
   }
 
+  @Public()
   @Post('transactions')
   @HttpCode(HttpStatus.CREATED)
   async createPaymentTransaction(
@@ -58,6 +59,7 @@ export class PaymentController {
     return await this.paymentService.getOrderTransactions(orderId);
   }
 
+  @Public()
   @Get('orders/:orderId/active-transaction')
   @HttpCode(HttpStatus.OK)
   async getActiveOrderTransaction(
