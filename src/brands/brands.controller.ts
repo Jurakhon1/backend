@@ -49,6 +49,7 @@ export class BrandsController {
     status: 409,
     description: 'Бренд с таким slug уже существует',
   })
+  //check
   async create(
     @Body() createBrandDto: CreateBrandDto,
   ): Promise<BrandResponseDto> {
