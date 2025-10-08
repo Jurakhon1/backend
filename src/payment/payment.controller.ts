@@ -145,7 +145,8 @@ export class PaymentController {
     return await this.paymentService.uploadReceipt(transactionId, imageUrl);
   }
 
-  @Post('transactions/:transactionId/upload-receipt-base64')
+  @Public()
+  @Put('transactions/:transactionId/upload-receipt-base64')
   @HttpCode(HttpStatus.OK)
   async uploadReceiptBase64(
     @Param('transactionId', ParseIntPipe) transactionId: number,
