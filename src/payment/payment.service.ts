@@ -169,7 +169,7 @@ export class PaymentService {
         order: { id: orderId },
         status: TransactionStatus.PENDING,
       },
-      relations: ['bank'],
+      relations: ['bank', 'order'],
     });
 
     if (!transaction) {
@@ -271,7 +271,7 @@ export class PaymentService {
   ): Promise<PaymentTransactionResponseDto> {
     const transaction = await this.transactionRepository.findOne({
       where: { id: transactionId },
-      relations: ['bank'],
+      relations: ['bank', 'order'],
     });
 
     if (!transaction) {
@@ -296,7 +296,7 @@ export class PaymentService {
   ): Promise<PaymentTransactionResponseDto> {
     const transaction = await this.transactionRepository.findOne({
       where: { id: transactionId },
-      relations: ['bank'],
+      relations: ['bank', 'order'],
     });
 
     if (!transaction) {
